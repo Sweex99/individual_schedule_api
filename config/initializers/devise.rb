@@ -317,32 +317,13 @@ Devise.setup do |config|
 
   # Конфігурація SAML
   config.saml_configure do |settings|
-    settings.assertion_consumer_service_url     = 'https://127.0.0.1:3001/users/saml/auth'
-    settings.assertion_consumer_service_binding = "urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST"
+    settings.assertion_consumer_service_url     = "#{ENV.fetch('BACK_END_URL')}/users/saml/auth"
+    settings.assertion_consumer_service_binding = 'urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST'
     settings.issuer                             = ENV.fetch('SSO_ISSUER')
     settings.idp_sso_target_url                 = ENV.fetch('IDP_SSO_TARGET_URL')
-    settings.idp_cert_fingerprint               = "C0:E4:27:6B:A3:08:5F:30:7D:BB:A7:15:11:B1:16:F6:12:8C:F6:71:D0:C4:70:7E:42:32:B0:5A:01:8E:6C:69"
+    settings.idp_cert_fingerprint               = ENV.fetch('IDP_SSO_FINGERPRINT')
     settings.idp_cert_fingerprint_algorithm     = "http://www.w3.org/2000/09/xmldsig#sha256"
     settings.name_identifier_format             = "urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress"
-    settings.idp_cert = <<-CERT
-      -----BEGIN CERTIFICATE-----
-      MIIDdjCCAl6gAwIBAgIGAZRHPlKBMA0GCSqGSIb3DQEBCwUAMHwxFDASBgNVBAoTC0dvb2dsZSBJ
-      bmMuMRYwFAYDVQQHEw1Nb3VudGFpbiBWaWV3MQ8wDQYDVQQDEwZHb29nbGUxGTAXBgNVBAsTEEdv
-      b2dsZSBXb3Jrc3BhY2UxCzAJBgNVBAYTAlVTMRMwEQYDVQQIEwpDYWxpZm9ybmlhMB4XDTI1MDEw
-      ODE4NDczNFoXDTMwMDEwNzE4NDczNFowfDEUMBIGA1UEChMLR29vZ2xlIEluYy4xFjAUBgNVBAcT
-      DU1vdW50YWluIFZpZXcxDzANBgNVBAMTBkdvb2dsZTEZMBcGA1UECxMQR29vZ2xlIFdvcmtzcGFj
-      ZTELMAkGA1UEBhMCVVMxEzARBgNVBAgTCkNhbGlmb3JuaWEwggEiMA0GCSqGSIb3DQEBAQUAA4IB
-      DwAwggEKAoIBAQC1HuPvp9vhVeIDXq3967z68aUROX35g9PbIaHK5S0YRb0QKteZmdGfZu1rIo1/
-      BXa6izOVry1HzH+B7T7j56XJ019wm4fRyBEzkinaUVmt/B2Pu9OqMh/uM7ECGwFtWKiv7vwEFGYT
-      LxREqk2Bh+uOzUCRvIBfCs7l167kcJwDOr9nmm0rBU4MEeApRkObdXptSxlLfDd3qEFziwpXAPlU
-      79NAqvxn3HH5rvUVYEpN3VuxJm53tsFNA2N/nb5xRpc8XOnj11Q4ihUwGpW56tKPkMVs8q20dbGX
-      NZGQXb7eTzH8ed44bZ2vtM+jclzcDNtyPJOJMP84twWoJQlziQQ7AgMBAAEwDQYJKoZIhvcNAQEL
-      BQADggEBAIj5q+24t3VQBpuF9r+Q8reJU9RpminazQVmQm99+pHZDsBNGjT6tbGdW5Xv/KeKPY2+
-      XnNUMiMBh/v+NwVhDFiUf1yz+buz7iUvN04dscR7tcCWqRVRbIZ8QmHo462DHcxELsu2ZivHi8Bo
-      jc9LGKjI2lShZLBcTXg1UiAC3QkTwe23vMPl+Onqt8r1tGFK3qBkam3OrZUYfAtt70y+npsi+sqM
-      ginUa6NlQy4/n+OGybEZgvbsOQBCKkdWSzJoQCsr4gFXhFQ94HXT6iU1GBRGV2qN/eWJJs74T/o6
-      Y2HCMH8EIAwk5XGwpSwaRMpe2JLqlL2QjnA70dqL27J0pt0=
-      -----END CERTIFICATE-----
-    CERT
+    settings.idp_cert                           = File.read(ENV.fetch('IDP_CERT_PATH'))
   end
 end
