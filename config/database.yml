@@ -85,3 +85,5 @@ production:
   database: pnu_indi_schedule_api_production
   username: pnu_indi_schedule_api
   password: <%= ENV["PNU_INDI_SCHEDULE_API_DATABASE_PASSWORD"] %>
+  host: pnu-indi-schedule-db
+  post: 5432
