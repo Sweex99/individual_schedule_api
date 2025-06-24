@@ -49,7 +49,7 @@ services:
     ports:
       - "3001:3001"
       - "3000:3000"
-    command: /bin/sh -c "rm -f tmp/pids/server.pid && bundle exec rails s"
+    command: /bin/sh -c "rm -f tmp/pids/server.pid && bundle exec rails s -b 0.0.0.0"
 
   pnu-indi-schedule-redis:
     image: redis:7.2.1-alpine
