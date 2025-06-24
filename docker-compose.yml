@@ -1,0 +1,70 @@
+services:
+  pnu-indi-schedule-db:
+    image: postgres:16.1-alpine
+    container_name: pnu-indi-schedule-db
+    restart: unless-stopped
+    tty: true
+    stdin_open: true
+    volumes:
+      - ./data/pg:/var/lib/postgresql/data/
+    environment:
+      POSTGRES_USER: pnu
+      POSTGRES_PASSWORD: 1234
+      POSTGRES_DB: pnu-indi-schedule-development
+      POSTGRES_INITDB_ARGS: "-A md5"
+      PGDATA: /var/lib/postgresql/data/
+      POSTGRES_WORK_MEM: 256MB
+      POSTGRES_MAINTENANCE_WORK_MEM: 512MB
+      POSTGRES_SHARED_BUFFERS: 512MB
+      POSTGRES_EFFECTIVE_CACHE_SIZE: 512MB
+      POSTGRES_MAX_CONNECTIONS: 100
+      POSTGRES_CHECKPOINT_TIMEOUT: 15min
+      POSTGRES_CHECKPOINT_COMPLETION_TARGET: 0.9
+    ports:
+      - "54321:5432"
+    networks:
+      - pnu-indi-schedule-net
+
+  pnu-indi-schedule-ruby: &pnu-indi-schedule-ruby
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    container_name: pnu-indi-schedule-ruby
+    restart: unless-stopped
+    tty: true
+    stdin_open: true
+    volumes:
+      - .:/app
+    env_file:
+      - ./.env
+    depends_on:
+      - pnu-indi-schedule-db
+      - pnu-indi-schedule-redis
+    networks:
+      - pnu-indi-schedule-net
+
+  pnu-indi-schedule-api:
+    <<: *pnu-indi-schedule-ruby
+    container_name: pnu-indi-schedule-api
+    ports:
+      - "3001:3001"
+      - "3000:3000"
+    command: /bin/sh -c "rm -f tmp/pids/server.pid && bundle exec rails s"
+
+  pnu-indi-schedule-redis:
+    image: redis:7.2.1-alpine
+    container_name: pnu-indi-schedule-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    networks:
+      - pnu-indi-schedule-net
+
+volumes:
+  redis-data:
+
+networks:
+  pnu-indi-schedule-net:
+    driver: bridge
