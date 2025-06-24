@@ -82,8 +82,8 @@ test:
 #
 production:
   <<: *default
-  database: pnu_indi_schedule_api_production
-  username: pnu_indi_schedule_api
-  password: <%= ENV["PNU_INDI_SCHEDULE_API_DATABASE_PASSWORD"] %>
+  database: <%= ENV.fetch("DATABASE_NAME") { 'pnu-indi-schedule-development' } %>
+  username: <%= ENV.fetch("DATABASE_USER") { 'pnu' } %>
+  password: <%= ENV.fetch("DATABASE_PASSWORD") { '1234' } %>
   host: pnu-indi-schedule-db
   post: 5432
