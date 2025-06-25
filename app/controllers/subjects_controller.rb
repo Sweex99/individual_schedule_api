@@ -2,7 +2,7 @@ class SubjectsController < ApplicationController
   before_action :set_subject, only: [ :update ]
 
   def index
-    search_term = params[:search].downcase
+    search_term = params[:search]&.downcase
     @subjects = Subject.where("LOWER(name) LIKE ?", "%#{search_term}%")
 
     render json: SubjectsSerializer.render_as_hash(@subjects.order('updated_at desc'), view: :with_related_teachers)

@@ -10,6 +10,7 @@ Rails.application.routes.draw do
   patch 'requests/update_status/:id', to: 'requests#update_status'
   get 'requests/:id/statement', to: 'requests#statement_generate'
   get 'requests/:ids/bulk_statement', to: 'requests#bulk_statement_generate'
+  get 'requests/:ids/requests_list_generate', to: 'requests#requests_list_generate'
 
   resources :subjects, only: [:index, :update, :create]
 

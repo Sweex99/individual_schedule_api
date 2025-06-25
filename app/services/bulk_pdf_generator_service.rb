@@ -5,7 +5,7 @@ class BulkPdfGeneratorService
   attr_reader :requests, :pdf_object
 
   def initialize(requests)
-    @requests   = requests
+    @requests = requests
   end
 
   def perform

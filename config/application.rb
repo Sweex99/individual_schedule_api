@@ -36,7 +36,7 @@ module PnuIndiScheduleApi
     config.middleware.insert_before 0, Rack::Cors do
       allow do
         origins 'https://localhost:3002', 'https://127.0.0.1:3002', 'https://indi-schedule.pp.ua'
-        resource '*', headers: :any, methods: [:get, :post, :patch, :put], credentials: true
+        resource '*', headers: :any, methods: [:get, :post, :patch, :put, :delete], credentials: true
       end
     end
   end

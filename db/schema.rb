@@ -67,10 +67,10 @@ ActiveRecord::Schema[7.1].define(version: 2025_05_04_171039) do
   end
 
   create_table "requests", force: :cascade do |t|
+    t.string "state"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "user_id"
-    t.string "state"
     t.bigint "reason_id"
     t.index ["reason_id"], name: "index_requests_on_reason_id"
     t.index ["user_id"], name: "index_requests_on_user_id"

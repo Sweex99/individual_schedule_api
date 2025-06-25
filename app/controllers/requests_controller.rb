@@ -2,7 +2,7 @@ class RequestsController < ApplicationController
   before_action :set_request, only: %i[ update update_status statement_generate ]
 
   def index
-    @requests = params[:state] == 'all' || params[:state].nil? ? Request.all : Request.where(state: params[:state])
+    @requests = params[:state] == 'all' || params[:state].nil? ? requests : Request.where(state: params[:state])
 
     render json: RequestsSerializer.render_as_hash(@requests, view: :with_student)
   end
@@ -22,6 +22,15 @@ class RequestsController < ApplicationController
 
   def bulk_statement_generate
     pdf = BulkPdfGeneratorService.new(Request.where(id: params[:ids].split(","))).perform
+
+    send_data pdf,
+            filename: "individual_schedule_requests.pdf",
+            type: "application/pdf",
+            disposition: "inline"
+  end
+
+  def requests_list_generate
+    pdf = RequestsListPdfGeneratorService.new(Request.where(id: params[:ids].split(","))).perform
 
     send_data pdf,
             filename: "individual_schedule_requests.pdf",
@@ -75,6 +84,10 @@ class RequestsController < ApplicationController
 
   def set_request
     @request = Request.find(params[:id])
+  end
+
+  def requests
+    current_user.type == 'Admin' ? Request.all : current_user.requests
   end
 
   def request_params
